@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VS Code Pro: Профессиональное создание сайтов с нуля</title>
+    
+    <!-- Фавикон -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23007acc%22>💻</text></svg>">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Основные стили -->
+    <style>
+        /* ========== CSS РЕСЕТ И БАЗОВЫЕ СТИЛИ ========== */
+        :root {
+            --primary: #007acc;
+            --primary-light: #4fc3f7;
+            --primary-dark: #005a9e;
+            --secondary: #68217a;
+            --accent: #4CAF50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --dark: #1a1a1a;
+            --darker: #0d0d0d;
+            --light: #f8f9fa;
+            --lighter: #ffffff;
+            --gray: #6c757d;
+            --border: #dee2e6;
+            
+            --gradient-primary: linear-gradient(135deg, #007acc 0%, #68217a 100%);
+            --gradient-dark: linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 100%);
+            --gradient-light: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 30px 80px rgba(0, 0, 0, 0.2);
+            
+            --radius: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 30px;
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            --header-height: 80px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            color: var(--dark);
+            background: var(--lighter);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Улучшенный скроллбар */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Контейнер */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+        }
+
+        /* Секции */
+        .section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        /* ========== НЕЙРОННАЯ СЕТЬ НА ФОНЕ ========== */
+        .neural-network {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .neuron {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: neuronFloat 20s infinite linear;
+        }
+
+        .connection {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.1;
+            animation: connectionPulse 3s infinite ease-in-out;
+        }
+
+        @keyframes neuronFloat {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(20px, -20px); }
+            50% { transform: translate(40px, 0); }
+            75% { transform: translate(20px, 20px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes connectionPulse {
+            0%, 100% { opacity: 0.05; }
+            50% { opacity: 0.2; }
+        }
+
+        /* ========== ХЕДЕР ========== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 122, 204, 0.1);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            height: var(--header-height);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .logo-highlight {
+            color: var(--primary);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 0;
+            position: relative;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* ========== КНОПКИ ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 32px;
+            border-radius: var(--radius);
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.6s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 122, 204, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 122, 204, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .btn-large {
+            padding: 20px 48px;
+            font-size: 1.25rem;
+            border-radius: var(--radius-lg);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        /* ========== ГЕРОЙ СЕКЦИЯ ========== */
+        .hero-section {
+            padding: 180px 0 100px;
+            position: relative;
+            overflow: hidden;
+            background: var(--gradient-light);
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--gray);
+            margin-bottom: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ========== СЕКЦИЯ ПРЕИМУЩЕСТВ ========== */
+        .features-section {
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--gray);
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(0, 122, 204, 0.1), rgba(104, 33, 122, 0.1));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .feature-description {
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* ========== СЕКЦИЯ УСТАНОВКИ ========== */
+        .install-section {
+            background: var(--gradient-light);
+        }
+
+        .install-steps {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .install-step {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .install-step {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 1.75rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: var(--radius);
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .code-keyword { color: #569cd6; }
+        .code-string { color: #ce9178; }
+        .code-comment { color: #6a9955; }
+        .code-function { color: #dcdcaa; }
+
+        /* ========== ТАЙМЛАЙН ИСТОРИИ ЯЗЫКОВ ========== */
+        .timeline-section {
+            background: white;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 60px auto 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gradient-primary);
+            transform: translateX(-50%);
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 60px 0;
+            width: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-item {
+                width: 100%;
+                padding-left: 80px;
+            }
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 80px;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 80px;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-item:nth-child(odd),
+            .timeline-item:nth-child(even) {
+                left: 0;
+                padding-right: 0;
+                padding-left: 80px;
+            }
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .timeline-year {
+            position: absolute;
+            top: -20px;
+            background: var(--primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-year {
+            right: -60px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-year {
+            left: -60px;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-item:nth-child(odd) .timeline-year,
+            .timeline-item:nth-child(even) .timeline-year {
+                left: 0;
+                right: auto;
+            }
+        }
+
+        /* ========== FAQ СЕКЦИЯ ========== */
+        .faq-section {
+            background: var(--gradient-light);
+            border-radius: var(--radius-xl);
+            padding: 80px;
+            margin: 60px 0;
+        }
+
+        @media (max-width: 768px) {
+            .faq-section {
+                padding: 40px 20px;
+            }
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .faq-question {
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: white;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .faq-icon {
+            color: var(--primary);
+            font-size: 1.25rem;
+            transition: var(--transition);
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition-slow);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 25px 25px;
+            max-height: 1000px;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        /* ========== ВИДЕО СЕКЦИЯ ========== */
+        .video-section {
+            background: white;
+        }
+
+        .video-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .video-header {
+            background: var(--darker);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            background: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ========== РЕСУРСЫ ДЛЯ СКАЧИВАНИЯ ========== */
+        .resources-section {
+            background: var(--gradient-light);
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .resource-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .resource-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        /* ========== ФУТЕР ========== */
+        footer {
+            background: var(--gradient-dark);
+            color: white;
+            padding: 80px 0 40px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--gradient-primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .creator-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 122, 204, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin-top: 20px;
+        }
+
+        /* ========== МОДАЛЬНОЕ ОКНО ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 1000px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background: var(--darker);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        /* ========== АДАПТИВНОСТЬ ========== */
+        @media (max-width: 992px) {
+            .nav-menu {
+                display: none;
+                position: fixed;
+                top: var(--header-height);
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 30px;
+                box-shadow: var(--shadow-lg);
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .section {
+                padding: 80px 0;
+            }
+            
+            .hero-section {
+                padding: 140px 0 60px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .faq-section {
+                padding: 40px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Нейронная сеть на фоне -->
+    <div class="neural-network" id="neuralNetwork"></div>
+
+    <!-- Хедер -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#home" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <span>VS Code<span class="logo-highlight">Pro</span></span>
+                </a>
+
+                <nav>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="#home" class="nav-link active"><i class="fas fa-home"></i> Главная</a></li>
+                        <li><a href="#features" class="nav-link"><i class="fas fa-star"></i> Преимущества</a></li>
+                        <li><a href="#install" class="nav-link"><i class="fas fa-download"></i> Установка</a></li>
+                        <li><a href="#timeline" class="nav-link"><i class="fas fa-history"></i> История языков</a></li>
+                        <li><a href="#video" class="nav-link"><i class="fas fa-video"></i> Видеоурок</a></li>
+                        <li><a href="#faq" class="nav-link"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Главный контент -->
+    <main>
+        <!-- Герой секция -->
+        <section class="hero-section" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Создание сайтов с нуля за 15 минут</h1>
+                    <p class="hero-subtitle">
+                        Профессиональное обучение веб-разработке от senior-разработчика с 15-летним опытом. 
+                        Не просто теория — реальные проекты, создание языков программирования и промышленные паттерны.
+                    </p>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-large" onclick="scrollToSection('install')">
+                            <i class="fas fa-rocket"></i> Начать обучение
+                        </button>
+                        <button class="btn btn-outline btn-large" onclick="openVideoModal()">
+                            <i class="fas fa-play-circle"></i> Смотреть урок
+                        </button>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <div class="stat-number">15+</div>
+                            <div class="stat-label">Лет опыта</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Проектов</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">10000+</div>
+                            <div class="stat-label">Студентов</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Практика</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция преимуществ -->
+        <section class="features-section" id="features">
+            <div class="container">
+                <h2 class="section-title">Почему этот курс уникален?</h2>
+                <p class="section-subtitle">
+                    Создан действующим разработчиком с опытом создания языков программирования 
+                    и архитектурой сложных систем
+                </p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <h3 class="feature-title">Архитектура языков программирования</h3>
+                        <p class="feature-description">
+                            Объясняю не просто синтаксис, а как языки устроены изнутри. 
+                            От лексического анализа до виртуальных машин. Понимание этих принципов 
+                            позволяет в 10 раз быстрее осваивать новые технологии.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <h3 class="feature-title">Промышленные паттерны разработки</h3>
+                        <p class="feature-description">
+                            Техники, которые используют в Google, Amazon и других гигантах. 
+                            Не абстрактная теория, а конкретные примеры из моей практики 
+                            создания высоконагруженных систем.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3 class="feature-title">Инструменты профессионалов</h3>
+                        <p class="feature-description">
+                            Не просто VS Code, а полный стек инструментов: от отладчиков 
+                            и профилировщиков до систем контроля версий и CI/CD. 
+                            То, что реально используют в продакшене.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция установки -->
+        <section class="install-section" id="install">
+            <div class="container">
+                <h2 class="section-title">Профессиональная установка</h2>
+                <p class="section-subtitle">
+                    Пошаговая настройка среды разработки как у senior-разработчиков
+                </p>
+
+                <div class="install-steps">
+                    <div class="install-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Установка VS Code с оптимизациями</h3>
+                            <p>Не просто скачивание, а тонкая настройка под задачи веб-разработки:</p>
+                            <div class="code-block">
+                                <span class="code-comment"># Установка через командную строку (Windows)</span><br>
+                                <span class="code-keyword">winget</span> <span class="code-function">install</span> Microsoft.VisualStudioCode<br><br>
+                                <span class="code-comment"># Автоматическая установка расширений</span><br>
+                                <span class="code-keyword">code</span> <span class="code-function">--install-extension</span> ms-vscode.live-server<br>
+                                <span class="code-keyword">code</span> <span class="code-function">--install-extension</span> esbenp.prettier-vscode<br>
+                                <span class="code-keyword">code</span> <span class="code-function">--install-extension</span> ritwickdey.LiveServer
+                            </div>
+                            <p>Настройка производительности для работы с большими проектами.</p>
+                        </div>
+                    </div>
+
+                    <div class="install-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Настройка системы контроля версий</h3>
+                            <p>Git — обязательный инструмент любого разработчика:</p>
+                            <div class="code-block">
+                                <span class="code-comment"># Инициализация репозитория</span><br>
+                                <span class="code-keyword">git</span> <span class="code-function">init</span><br>
+                                <span class="code-keyword">git</span> <span class="code-function">config</span> user.name "Ваше Имя"<br>
+                                <span class="code-keyword">git</span> <span class="code-function">config</span> user.email "ваш@email.com"<br><br>
+                                <span class="code-comment"># Первый коммит</span><br>
+                                <span class="code-keyword">git</span> <span class="code-function">add</span> .<br>
+                                <span class="code-keyword">git</span> <span class="code-function">commit</span> -m "Initial commit"
+                            </div>
+                            <p>Настройка .gitignore для исключения временных файлов.</p>
+                        </div>
+                    </div>
+
+                    <div class="install-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Настройка окружения разработки</h3>
+                            <p>Создание профессиональной структуры проекта:</p>
+                            <div class="code-block">
+                                <span class="code-comment"># Структура профессионального проекта</span><br>
+                                project/<br>
+                                ├── src/<br>
+                                │   ├── index.html<br>
+                                │   ├── css/<br>
+                                │   │   └── main.css<br>
+                                │   ├── js/<br>
+                                │   │   └── app.js<br>
+                                │   └── assets/<br>
+                                ├── package.json<br>
+                                ├── .gitignore<br>
+                                └── README.md
+                            </div>
+                            <p>Автоматизация сборки с помощью npm scripts.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Таймлайн истории языков -->
+        <section class="timeline-section" id="timeline">
+            <div class="container">
+                <h2 class="section-title">Эволюция языков программирования</h2>
+                <p class="section-subtitle">
+                    Как создавались и развивались технологии, которые мы используем сегодня
+                </p>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">1972</div>
+                        <div class="timeline-content">
+                            <h3>Язык C - фундамент современной разработки</h3>
+                            <p>Создан Деннисом Ритчи в Bell Labs. Проектировался для системного 
+                            программирования, но стал основой для создания операционных систем, 
+                            компиляторов и других языков. Его синтаксис и принципы легли в основу 
+                            C++, C#, Java и JavaScript.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">1995</div>
+                        <div class="timeline-content">
+                            <h3>Рождение JavaScript</h3>
+                            <p>Создан Бренданом Эйхом за 10 дней как язык сценариев для браузера 
+                            Netscape. Первоначально назывался Mocha, затем LiveScript. 
+                            Несмотря на спешку при создании, стал самым популярным языком 
+                            в мире благодаря вебу.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">2000</div>
+                        <div class="timeline-content">
+                            <h3>C# - язык платформы .NET</h3>
+                            <p>Создан Андерсом Хейлсбергом в Microsoft как современная альтернатива 
+                            Java. Комбинирует лучшие черты C++ и Java с инновационными возможностями 
+                            вроде свойств, событий и атрибутов.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">2009</div>
+                        <div class="timeline-content">
+                            <h3>Node.js - JavaScript на сервере</h3>
+                            <p>Создан Райаном Далем. Использовал движок V8 от Chrome для выполнения 
+                            JavaScript вне браузера. Революция в веб-разработке — один язык для 
+                            клиента и сервера.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-year">2012</div>
+                        <div class="timeline-content">
+                            <h3>TypeScript - типизированный JavaScript</h3>
+                            <p>Создан Андерсом Хейлсбергом в Microsoft. Добавляет статическую 
+                            типизацию к JavaScript, что позволяет находить ошибки на этапе 
+                            компиляции. Используется в Angular и других крупных фреймворках.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Видео секция -->
+        <section class="video-section" id="video">
+            <div class="container">
+                <h2 class="section-title">15-минутный видеоурок</h2>
+                <p class="section-subtitle">
+                    Полный мастер-класс: создание сайта с нуля до публикации на хостинге
+                </p>
+
+                <div class="video-container">
+                    <div class="video-header">
+                        <h3 style="margin: 0; color: white;">Основной видеоурок</h3>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-clock"></i>
+                            <span>15 минут</span>
+                        </div>
+                    </div>
+                    
+                    <div class="video-wrapper">
+                        <iframe 
+                            src="https://rutube.ru/play/embed/82d6b0821ca429df7aad2f3e4d1fbc46" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen
+                            title="Создание сайта за 15 минут - VS Code Pro">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Секция -->
+        <section class="faq-section" id="faq">
+            <div class="container">
+                <h2 class="section-title">Часто задаваемые вопросы</h2>
+                <p class="section-subtitle">
+                    Ответы на вопросы от начинающих разработчиков
+                </p>
+
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Я молодой разработчик, с чего мне начать?</span>
+                            <i class="fas fa-plus faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p><strong>Начните с основ:</strong> HTML, CSS и JavaScript. Не гонитесь за фреймворками сразу.</p>
+                            <p>Поймите, как работает DOM, как стили применяются к элементам, 
+                            как JavaScript взаимодействует со страницей. Создайте 5-10 простых 
+                            проектов, прежде чем переходить к React/Vue.</p>
+                            <p>Мой совет: каждый день кодить минимум 2 часа. Через 6 месяцев 
+                            вы будете на уровне junior-разработчика.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Как вы создавали языки программирования?</span>
+                            <i class="fas fa-plus faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Процесс создания языка включает несколько этапов:</p>
+                            <ol style="margin-left: 20px; margin-top: 15px;">
+                                <li><strong>Определение целей</strong>: для каких задач язык?</li>
+                                <li><strong>Дизайн синтаксиса</strong>: как будет выглядеть код?</li>
+                                <li><strong>Лексический анализатор</strong>: разбивка кода на токены</li>
+                                <li><strong>Парсер</strong>: построение абстрактного синтаксического дерева</li>
+                                <li><strong>Генерация кода</strong>: преобразование в исполняемый формат</li>
+                                <li><strong>Оптимизации</strong>: улучшение производительности</li>
+                            </ol>
+                            <p style="margin-top: 15px;">Каждый этап требует глубокого понимания компьютерных наук.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Что важнее: теория или практика?</span>
+                            <i class="fas fa-plus faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Оба аспекта критически важны:</p>
+                            <p><strong>Практика</strong> даёт навыки решения реальных задач, 
+                            понимание workflow и инструментов.</p>
+                            <p><strong>Теория</strong> (алгоритмы, структуры данных, архитектура) 
+                            позволяет решать сложные задачи оптимально и масштабировать решения.</p>
+                            <p>Идеальное соотношение: 70% практики, 30% теории на начальном этапе.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Как стать senior-разработчиком?</span>
+                            <i class="fas fa-plus faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Путь к senior-уровню:</p>
+                            <ul style="margin-left: 20px; margin-top: 15px;">
+                                <li><strong>Годы 1-2</strong>: Освоение основ, работа над реальными проектами</li>
+                                <li><strong>Годы 3-4</strong>: Углубление в выбранный стек, архитектура</li>
+                                <li><strong>Годы 5+</strong>: Системное мышление, менторинг, техническое лидерство</li>
+                            </ul>
+                            <p style="margin-top: 15px;">Ключевые навыки senior: проектирование систем, код-ревью, 
+                            постановка задач, работа с legacy кодом.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ресурсы для скачивания -->
+        <section class="resources-section">
+            <div class="container">
+                <h2 class="section-title">Готовые материалы</h2>
+                <p class="section-subtitle">
+                    Скачайте файлы, чтобы повторять за видео и сохранить результат работы
+                </p>
+
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-file-code"></i>
+                        </div>
+                        <h3>Готовый HTML код</h3>
+                        <p>Полный код файла index.html с комментариями для каждого раздела</p>
+                        <button class="btn btn-primary" onclick="downloadFile('html')" style="margin-top: 20px;">
+                            <i class="fas fa-download"></i> Скачать HTML
+                        </button>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3>CSS стили</h3>
+                        <p>Красивые стили для вашего сайта. Можно менять цвета и настройки</p>
+                        <button class="btn btn-primary" onclick="downloadFile('css')" style="margin-top: 20px;">
+                            <i class="fas fa-download"></i> Скачать CSS
+                        </button>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3>Чек-лист шагов</h3>
+                        <p>Пошаговый чек-лист в PDF формате. Распечатайте и отмечайте пройденные шаги</p>
+                        <button class="btn btn-primary" onclick="downloadFile('checklist')" style="margin-top: 20px;">
+                            <i class="fas fa-download"></i> Скачать чек-лист
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Футер -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>VS Code Pro</h3>
+                    <p>Профессиональное обучение веб-разработке от практикующего 
+                    разработчика с 15-летним опытом.</p>
+                    <div class="creator-badge">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Основатель: Senior Developer</span>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Навигация</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home"><i class="fas fa-chevron-right"></i> Главная</a></li>
+                        <li><a href="#features"><i class="fas fa-chevron-right"></i> Преимущества</a></li>
+                        <li><a href="#install"><i class="fas fa-chevron-right"></i> Установка</a></li>
+                        <li><a href="#timeline"><i class="fas fa-chevron-right"></i> История языков</a></li>
+                        <li><a href="#video"><i class="fas fa-chevron-right"></i> Видеоурок</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Ресурсы</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="downloadFile('html')"><i class="fas fa-download"></i> HTML код</a></li>
+                        <li><a href="#" onclick="downloadFile('css')"><i class="fas fa-download"></i> CSS стили</a></li>
+                        <li><a href="#" onclick="downloadFile('checklist')"><i class="fas fa-download"></i> Чек-лист</a></li>
+                        <li><a href="https://beget.com/ru" target="_blank"><i class="fas fa-external-link-alt"></i> Хостинг Beget</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 VS Code Pro. Все права защищены.</p>
+                <p>Проект создан профессиональным разработчиком для будущих профессионалов.</p>
+                <div class="creator-badge">
+                    <i class="fas fa-heart"></i>
+                    <span>Создано с passion к коду</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно для видео -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="margin: 0; color: white;">Мастер-класс: Создание сайта с нуля за 15 минут</h3>
+                <button class="close-modal" onclick="closeVideoModal()">&times;</button>
+            </div>
+            <div style="padding: 20px; background: #000;">
+                <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+                    <iframe 
+                        src="https://rutube.ru/play/embed/82d6b0821ca429df7aad2f3e4d1fbc46" 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Нейронная сеть на фоне
+        function createNeuralNetwork() {
+            const container = document.getElementById('neuralNetwork');
+            const neurons = 100;
+            const connections = 200;
+            
+            // Создаем нейроны
+            for (let i = 0; i < neurons; i++) {
+                const neuron = document.createElement('div');
+                neuron.className = 'neuron';
+                neuron.style.left = `${Math.random() * 100}%`;
+                neuron.style.top = `${Math.random() * 100}%`;
+                neuron.style.animationDelay = `${Math.random() * 20}s`;
+                container.appendChild(neuron);
+            }
+            
+            // Создаем соединения
+            for (let i = 0; i < connections; i++) {
+                const connection = document.createElement('div');
+                connection.className = 'connection';
+                
+                const x1 = Math.random() * 100;
+                const y1 = Math.random() * 100;
+                const x2 = x1 + (Math.random() - 0.5) * 40;
+                const y2 = y1 + (Math.random() - 0.5) * 40;
+                
+                const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                
+                connection.style.width = `${length}%`;
+                connection.style.left = `${x1}%`;
+                connection.style.top = `${y1}%`;
+                connection.style.transform = `rotate(${angle}deg)`;
+                connection.style.animationDelay = `${Math.random() * 3}s`;
+                
+                container.appendChild(connection);
+            }
+        }
+        
+        // Мобильное меню
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+        
+        // Закрытие меню при клике на ссылку
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navMenu').classList.remove('active');
+            });
+        });
+        
+        // Плавная прокрутка
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#') && href.length > 1) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        const targetPosition = target.getBoundingClientRect().top + 
+                                             window.pageYOffset - headerHeight;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Обновление активной ссылки
+                        document.querySelectorAll('.nav-link').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    }
+                }
+            });
+        });
+        
+        // FAQ аккордеон
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const item = this.parentElement;
+                const isOpen = item.classList.contains('active');
+                
+                // Закрытие других FAQ
+                document.querySelectorAll('.faq-item.active').forEach(openItem => {
+                    if (openItem !== item) {
+                        openItem.classList.remove('active');
+                    }
+                });
+                
+                // Переключение текущего FAQ
+                item.classList.toggle('active', !isOpen);
+            });
+        });
+        
+        // Открытие модального окна с видео
+        function openVideoModal() {
+            document.getElementById('videoModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Закрытие модального окна
+        function closeVideoModal() {
+            document.getElementById('videoModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Прокрутка к секции
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                const headerHeight = document.querySelector('header').offsetHeight;
+                window.scrollTo({
+                    top: section.offsetTop - headerHeight,
+                    behavior: 'smooth'
+                });
+            }
+        }
+        
+        // Скачивание файлов
+        function downloadFile(type) {
+            let content = '';
+            let filename = '';
+            let mimeType = 'text/plain';
+            
+            switch(type) {
+                case 'html':
+                    content = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой первый сайт - VS Code Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #007acc;
+            --secondary: #68217a;
+            --accent: #4CAF50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 20px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: var(--primary);
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Мой первый сайт!</h1>
+            <p>Создан за 15 минут с помощью VS Code Pro</p>
+            <p>Это полностью рабочий HTML файл. Сохраните его как index.html и откройте в браузере!</p>
+            <a href="#" class="btn">
+                <i class="fas fa-rocket"></i> Начать разработку
+            </a>
+        </header>
+    </div>
+</body>
+</html>`;
+                    filename = 'index.html';
+                    mimeType = 'text/html';
+                    break;
+                    
+                case 'css':
+                    content = `/* Основные стили для первого сайта */
+:root {
+    --primary: #007acc;
+    --primary-light: #4fc3f7;
+    --primary-dark: #005a9e;
+    --secondary: #68217a;
+    --accent: #4CAF50;
+    --dark: #1a1a1a;
+    --light: #f8f9fa;
+    --lighter: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: var(--dark);
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Шапка */
+header {
+    text-align: center;
+    padding: 80px 20px;
+    background: var(--lighter);
+    border-radius: 20px;
+    margin: 40px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 1px solid rgba(0, 122, 204, 0.1);
+}
+
+h1 {
+    color: var(--primary);
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+h2 {
+    color: var(--secondary);
+    font-size: 2rem;
+    margin: 40px 0 20px;
+}
+
+p {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Кнопки */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 122, 204, 0.3);
+}
+
+/* Сетка */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin: 60px 0;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        font-size: 1.75rem;
+    }
+    
+    .grid {
+        grid-template-columns: 1fr;
+    }
+    
+    header {
+        padding: 40px 20px;
+        margin: 20px 0;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Утилиты */
+.text-center {
+    text-align: center;
+}
+
+.mt-4 {
+    margin-top: 40px;
+}
+
+.mb-4 {
+    margin-bottom: 40px;
+}`;
+                    filename = 'style.css';
+                    break;
+                    
+                case 'checklist':
+                    content = `ЧЕК-ЛИСТ: СОЗДАНИЕ САЙТА ЗА 15 МИНУТ
+=====================================
+
+✅ 1. УСТАНОВКА И НАСТРОЙКА VS CODE
+   [ ] Скачать Visual Studio Code с официального сайта
+   [ ] Запустить установщик и выбрать все опции
+   [ ] Установить расширения:
+       - Live Server
+       - Prettier
+       - Auto Rename Tag
+   [ ] Настроить горячие клавиши
+   [ ] Проверить работу VS Code
+
+✅ 2. СОЗДАНИЕ ПРОЕКТА
+   [ ] Создать папку для проекта
+   [ ] Открыть папку в VS Code
+   [ ] Создать файлы:
+       - index.html
+       - style.css
+       - script.js (опционально)
+   [ ] Проверить структуру проекта
+
+✅ 3. НАПИСАНИЕ HTML КОДА
+   [ ] Создать базовую структуру HTML
+   [ ] Добавить мета-теги (viewport, charset)
+   [ ] Подключить CSS и JS файлы
+   [ ] Создать семантическую разметку
+   [ ] Добавить контент и изображения
+   [ ] Проверить валидность кода
+
+✅ 4. СТИЛИЗАЦИЯ CSS
+   [ ] Сбросить стандартные стили
+   [ ] Настроить базовые стили (шрифты, цвета)
+   [ ] Создать адаптивную верстку
+   [ ] Добавить анимации и переходы
+   [ ] Протестировать на разных устройствах
+   [ ] Оптимизировать производительность
+
+✅ 5. ТЕСТИРОВАНИЕ И ОТЛАДКА
+   [ ] Открыть сайт в браузере
+   [ ] Проверить адаптивность
+   [ ] Протестировать на скорость загрузки
+   [ ] Исправить ошибки валидации
+   [ ] Проверить доступность (accessibility)
+   [ ] Протестировать в разных браузерах
+
+✅ 6. ПУБЛИКАЦИЯ НА ХОСТИНГЕ
+   [ ] Зарегистрироваться на Beget.com
+   [ ] Выбрать тариф и домен
+   [ ] Оплатить хостинг
+   [ ] Загрузить файлы через FTP/файловый менеджер
+   [ ] Настроить домен и SSL
+   [ ] Проверить работу сайта онлайн
+
+✅ 7. ОПТИМИЗАЦИЯ И SEO
+   [ ] Оптимизировать изображения
+   [ ] Настроить мета-теги для SEO
+   [ ] Добавить фавикон
+   [ ] Проверить скорость загрузки
+   [ ] Настроить кеширование
+   [ ] Добавить аналитику
+
+🚀 ВАЖНЫЕ СОВЕТЫ:
+• Сохраняйте файлы регулярно (Ctrl+S)
+• Используйте комментарии в коде
+• Следите за структурой проекта
+• Тестируйте после каждого изменения
+• Изучайте консоль разработчика
+• Не бойтесь экспериментировать
+
+🎯 ПЛАН ДАЛЬНЕЙШЕГО РАЗВИТИЯ:
+1. Изучить JavaScript основы
+2. Освоить Git и GitHub
+3. Изучить фреймворки (React/Vue)
+4. Освоить Node.js для backend
+5. Изучить базы данных
+6. Создать портфолио проектов
+
+УСПЕХОВ В ОБУЧЕНИИ! 💻✨
+
+Этот чек-лист поможет вам систематизировать процесс
+создания сайтов и не упустить важные этапы.`;
+                    filename = 'чек-лист.txt';
+                    break;
+            }
+            
+            const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Показать уведомление
+            showNotification(`Файл "${filename}" успешно скачан!`);
+        }
+        
+        // Уведомление
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            createNeuralNetwork();
+            
+            // Анимация статистики
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                if (!isNaN(target)) {
+                    animateCounter(stat, target);
+                }
+            });
+            
+            // Плавное появление элементов при скролле
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.feature-card, .install-step, .timeline-item').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s ease';
+                observer.observe(el);
+            });
+            
+            // Скрытие хедера при скролле вниз
+            let lastScroll = 0;
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                const header = document.querySelector('header');
+                
+                if (currentScroll > lastScroll && currentScroll > 100) {
+                    header.style.transform = 'translateY(-100%)';
+                } else {
+                    header.style.transform = 'translateY(0)';
+                }
+                
+                lastScroll = currentScroll;
+            });
+            
+            // Горячие клавиши
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeVideoModal();
+                }
+                if (e.key === ' ' && e.target === document.body) {
+                    e.preventDefault();
+                    openVideoModal();
+                }
+            });
+        });
+        
+        // Анимация счетчиков
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 20);
+        }
+        
+        // CSS для анимаций
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html> cltk
